@@ -12,6 +12,9 @@ def play():
                 cnt += 1
             # 연속이 아니면
             else:
+                # 최댓값 갱신이 불가능하면
+                if N-j+1 < ans:
+                    break
                 cnt = 1
             mx = max(mx, cnt)
 
@@ -24,6 +27,9 @@ def play():
                 cnt += 1
             # 연속이 아니면
             else:
+                # 최댓값 갱신이 불가능하면
+                if N-i+1 < ans:
+                    break
                 cnt = 1
             mx = max(mx, cnt)
     # 최댓값 갱신
