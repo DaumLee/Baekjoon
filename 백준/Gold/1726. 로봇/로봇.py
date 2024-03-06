@@ -12,9 +12,9 @@ def turn(cd, time):
 
 def bfs(si, sj, sd):
     q = deque([(si, sj, sd, 0)])
-    v = [[[[] for j in range(M)] for i in range(N)] for k in range(4)]
-    dir = [[[] for j in range(M)] for _ in range(N)]
-    dir[si][sj].append(sd)
+    v = [[0] * M for _ in range(N)]
+    dir = [[[] for j in range(M)] for i in range(N)]
+    v[si][sj] = 1
 
     while q:
         ci, cj, cd, time = q.popleft()
@@ -23,16 +23,12 @@ def bfs(si, sj, sd):
         # go
         for di, dj in delta[cd]:
             ni, nj = ci+di, cj+dj
-            # 몇 칸 가는지 체크하고
-            k = abs(di)+abs(dj)
-            # 해당 방향으로 해당 칸 수 만큼 간 적이 있는지 확인
-            if 0 <= ni < N and 0 <= nj < M and k not in v[cd][ni][nj]:
+            if 0 <= ni < N and 0 <= nj < M and not v[ni][nj]:
                 # 장애물을 만나면 더 나아갈 수 없음
                 if arr[ni][nj] == 1:
                     break
-                v[cd][ni][nj].append(k)
+                v[ni][nj] = 1
                 q.append((ni, nj, cd, time+1))
-
         # turn left
         ld = (cd+1)%4
         # 해당 방향으로 진행한 적 없으면
