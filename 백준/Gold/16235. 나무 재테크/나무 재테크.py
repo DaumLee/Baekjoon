@@ -1,5 +1,7 @@
+from collections import deque
+
 def earn(cur):
-    nxt = [[list() for j in range(N)] for i in range(N)]
+    nxt = [[deque() for j in range(N)] for i in range(N)]
 
     # 봄
     for i in range(N):
@@ -14,7 +16,8 @@ def earn(cur):
                         nxt[i][j].append(age+1)
                     # 양분이 다 떨어졌으면 여름 진행
                     else:
-                        for age in cur[i][j][idx:]:
+                        for a in range(idx, len(cur[i][j])):
+                            age = cur[i][j][a]
                             arr[i][j] += age//2
                         break
 
@@ -30,7 +33,7 @@ def earn(cur):
                             ni, nj = i+di, j+dj
                             # 맨 앞에 나이가 1인 나무 추가
                             if 0 <= ni < N and 0 <= nj < N:
-                                nxt[ni][nj] = [1] + nxt[ni][nj]
+                                nxt[ni][nj].appendleft(1)
 
     #  겨울
     for i in range(N):
@@ -42,20 +45,13 @@ def earn(cur):
 N, M, K = map(int, input().split())
 arr = [[5] * N for _ in range(N)]
 A = [list(map(int, input().split())) for _ in range(N)]
-tree = [[list() for j in range(N)] for i in range(N)]
+tree = [[deque() for j in range(N)] for i in range(N)]
 
 delta = ((-1, 0), (-1, 1), (-1, -1), (0, 1), (0, -1), (1, -1), (1, 1), (1, 0))
 
 for _ in range(M):
     i, j, k = map(int, input().split())
     tree[i-1][j-1].append(k)
-
-# 최초 1회만 정렬
-for i in range(N):
-    for j in range(N):
-        # 한 칸에 두 개 이상 나무가 있으면
-        if len(tree[i][j]) >= 2:
-            tree[i][j].sort()
 
 for _ in range(K):
     tree = earn(tree)
