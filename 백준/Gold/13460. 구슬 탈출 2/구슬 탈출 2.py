@@ -32,7 +32,7 @@ def solve(cd, ri, rj, bi, bj):
         di, dj = delta[cd]
         ni, nj = ci+di, cj+dj
         # 벽이 아니거나 공이 부딪히지 않으면 진행 가능
-        if arr[ni][nj] != '#' and not (c == 0 and ni == bi and nj == bj) and not (c == 1 and ni == ri and nj ==rj):
+        if arr[ni][nj] != '#' and not (c == 0 and ni == bi and nj == bj) and not (c == 1 and ni == ri and nj == rj):
             # 공이 구멍에 도착하면 카운트 증가
             if arr[ni][nj] == 'O':
                 # 파란 공이면 해당 조합 불가능
@@ -67,24 +67,24 @@ def combinations(n, cd, ri, rj, bi, bj):
     if n >= ans:
         return
     ri, rj, bi, bj, flag = solve(cd, ri, rj, bi, bj)
-    # 파란 공이 구멍에 빠지거나 빨간 공이랑 동시에 빠진 경우 더 이상 진행하지 않음
+    # flag = 0 : 구멍에 아무 공도 들어가지 못함 / flag = 1 : 파란 공이 구멍에 빠짐 / flag = 2 : 빨간 공만 구멍에 들어감
     if flag:
         if flag == 2:
             ans = min(ans, n)
         return
-    if not (arr[ri+delta[0][0]][rj+delta[0][1]] == '#' and arr[bi+delta[0][0]][bj+delta[0][1]] == '#'):
+    # 직전과 같은 방향이면 어차피 진행 불가능
+    if cd != 0 and not (arr[ri+delta[0][0]][rj+delta[0][1]] == '#' and arr[bi+delta[0][0]][bj+delta[0][1]] == '#'):
         combinations(n+1, 0, ri, rj, bi, bj)
-    if not (arr[ri+delta[1][0]][rj+delta[1][1]] == '#' and arr[bi+delta[1][0]][bj+delta[1][1]] == '#'):
+    if cd != 1 and not (arr[ri+delta[1][0]][rj+delta[1][1]] == '#' and arr[bi+delta[1][0]][bj+delta[1][1]] == '#'):
         combinations(n+1, 1, ri, rj, bi, bj)
-    if not (arr[ri+delta[2][0]][rj+delta[2][1]] == '#' and arr[bi+delta[2][0]][bj+delta[2][1]] == '#'):
+    if cd != 2 and not (arr[ri+delta[2][0]][rj+delta[2][1]] == '#' and arr[bi+delta[2][0]][bj+delta[2][1]] == '#'):
         combinations(n+1, 2, ri, rj, bi, bj)
-    if not (arr[ri+delta[3][0]][rj+delta[3][1]] == '#' and arr[bi+delta[3][0]][bj+delta[3][1]] == '#'):
+    if cd != 3 and not (arr[ri+delta[3][0]][rj+delta[3][1]] == '#' and arr[bi+delta[3][0]][bj+delta[3][1]] == '#'):
         combinations(n+1, 3, ri, rj, bi, bj)
 
 
 N, M = map(int, input().split())
 arr = []
-wall = []
 for i in range(N):
     lst = input()
     for j in range(M):
@@ -92,12 +92,7 @@ for i in range(N):
             bi, bj = i, j
         elif lst[j] == 'R':
             ri, rj = i, j
-        elif lst[j] == '#':
-            wall.append((i, j))
-        elif lst[j] == 'O':
-            ei, ej = i, j
     arr.append(lst)
-
 
 delta = ((-1, 0), (1, 0), (0, -1), (0, 1))
 ans = 11
