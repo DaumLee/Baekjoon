@@ -1,5 +1,3 @@
-
-
 def roll(v, d):
     for k in range(d):
         if v == 42:
@@ -12,7 +10,7 @@ def roll(v, d):
     return v
 
 
-def solve(n, s1, s2, s3, s4, score, tlst):
+def solve(n, s1, s2, s3, s4, score):
     global ans
     ans = max(ans, score)
     if n == 10:
@@ -69,7 +67,7 @@ def solve(n, s1, s2, s3, s4, score, tlst):
             s = 0
         else:
             s = e1
-        solve(n+1, e1, s2, s3, s4, score+s, tlst+[(1, s)])
+        solve(n+1, e1, s2, s3, s4, score+s)
     if e2 != -1 and e2 != s1 and e2 != s3 and e2 != s4:
         if e2 == 101:
             s = 13
@@ -97,7 +95,7 @@ def solve(n, s1, s2, s3, s4, score, tlst):
             s = 0
         else:
             s = e2
-        solve(n+1, s1, e2, s3, s4, score+s, tlst+[(2, s)])
+        solve(n+1, s1, e2, s3, s4, score+s)
     if e3 != -1 and e3 != s1 and e3 != s2 and e3 != s4:
         if e3 == 101:
             s = 13
@@ -125,7 +123,7 @@ def solve(n, s1, s2, s3, s4, score, tlst):
             s = 0
         else:
             s = e3
-        solve(n+1, s1, s2, e3, s4, score+s, tlst+[(3, s)])
+        solve(n+1, s1, s2, e3, s4, score+s)
     if e4 != -1 and e4 != s1 and e4 != s2 and e4 != s3:
         if e4 == 101:
             s = 13
@@ -153,7 +151,7 @@ def solve(n, s1, s2, s3, s4, score, tlst):
             s = 0
         else:
             s = e4
-        solve(n+1, s1, s2, s3, e4, score+s, tlst+[(4, s)])
+        solve(n+1, s1, s2, s3, e4, score+s)
 
 
 lst = list(map(int, input().split()))
@@ -204,5 +202,5 @@ for q in range(lst[0]):
         s1 = start[s1]
     else:
         s1 = middle[s1]
-solve(1, s1, s2, s3, s4, s1, [])
+solve(1, s1, s2, s3, s4, s1)
 print(ans)
