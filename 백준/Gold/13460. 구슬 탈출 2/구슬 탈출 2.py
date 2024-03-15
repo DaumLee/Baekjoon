@@ -30,35 +30,36 @@ def solve(cd, ri, rj, bi, bj):
     while q:
         ci, cj, c = q.popleft()
         di, dj = delta[cd]
-        ni, nj = ci+di, cj+dj
-        # 벽이 아니거나 공이 부딪히지 않으면 진행 가능
-        if arr[ni][nj] != '#' and not (c == 0 and ni == bi and nj == bj) and not (c == 1 and ni == ri and nj == rj):
-            # 공이 구멍에 도착하면 카운트 증가
-            if arr[ni][nj] == 'O':
-                # 파란 공이면 해당 조합 불가능
-                if c == 1:
-                    return ri, rj, bi, bj, 1
-                # 빨간 공이 도착하면 일단 파란공까지 확인
-                else:
-                    # 빨간 공 제거
-                    ri = rj = -1
-                    ans = 1
-                    continue
-            q.append((ni, nj, c))
-            if c == 0:
-                ri, rj = ni, nj
+        while True:
+            ni, nj = ci+di, cj+dj
+            # 벽이 아니거나 공이 부딪히지 않으면 진행 가능
+            if arr[ni][nj] != '#' and not (c == 0 and ni == bi and nj == bj) and not (c == 1 and ni == ri and nj == rj):
+                # 공이 구멍에 도착하면 카운트 증가
+                if arr[ni][nj] == 'O':
+                    # 파란 공이면 해당 조합 불가능
+                    if c == 1:
+                        return ri, rj, bi, bj, 1
+                    # 빨간 공이 도착하면 일단 파란공까지 확인
+                    else:
+                        # 빨간 공 제거
+                        ri = rj = -1
+                        ans = 1
+                        break
+                ci, cj = ni, nj
             else:
-                bi, bj = ni, nj
-
-    # bfs가 끝난 후 조건을 만족했다면
+                if c == 0:
+                    ri, rj = ci, cj
+                else:
+                    bi, bj = ci, cj
+                break
+    # 빨간 공만 들어갔으면
     if ans:
         return ri, rj, bi, bj, 2
     # 조건을 만족하지 않았다면 다음도 진행
     else:
         return ri, rj, bi, bj, 0
 
-
-def combinations(n, cd, ri, rj, bi, bj):
+def product(n, cd, ri, rj, bi, bj):
     global ans
     # 10회를 넘어갈 수 없음
     if n > 10:
@@ -74,14 +75,13 @@ def combinations(n, cd, ri, rj, bi, bj):
         return
     # 직전과 같은 방향이면 어차피 진행 불가능
     if cd != 0 and not (arr[ri+delta[0][0]][rj+delta[0][1]] == '#' and arr[bi+delta[0][0]][bj+delta[0][1]] == '#'):
-        combinations(n+1, 0, ri, rj, bi, bj)
+        product(n+1, 0, ri, rj, bi, bj)
     if cd != 1 and not (arr[ri+delta[1][0]][rj+delta[1][1]] == '#' and arr[bi+delta[1][0]][bj+delta[1][1]] == '#'):
-        combinations(n+1, 1, ri, rj, bi, bj)
+        product(n+1, 1, ri, rj, bi, bj)
     if cd != 2 and not (arr[ri+delta[2][0]][rj+delta[2][1]] == '#' and arr[bi+delta[2][0]][bj+delta[2][1]] == '#'):
-        combinations(n+1, 2, ri, rj, bi, bj)
+        product(n+1, 2, ri, rj, bi, bj)
     if cd != 3 and not (arr[ri+delta[3][0]][rj+delta[3][1]] == '#' and arr[bi+delta[3][0]][bj+delta[3][1]] == '#'):
-        combinations(n+1, 3, ri, rj, bi, bj)
-
+        product(n+1, 3, ri, rj, bi, bj)
 
 N, M = map(int, input().split())
 arr = []
@@ -101,7 +101,7 @@ for sd in range(4):
     # 둘다 바로 벽에 막히는 경우는 빼고 조합 진행
     if arr[ri+di][rj+dj] == '#' and arr[bi+di][bj+dj] == '#':
         continue
-    combinations(1, sd, ri, rj, bi, bj)
+    product(1, sd, ri, rj, bi, bj)
 
 if ans == 11:
     print(-1)
