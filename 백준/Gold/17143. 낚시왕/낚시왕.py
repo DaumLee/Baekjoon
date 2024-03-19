@@ -1,48 +1,56 @@
+'''
+가속은 곧 힘
+힘은 곧 가속도 되니
+F = ma
+force = mass * acceleration
+'''
+
 def catch(j):
-    for i in range(1, N+1):
+    for i in range(N):
         if arr[i][j]:
-            # 잡았다
-            ret = arr[i][j][0]
-            # 맵에서 제거
-            arr[i][j] = []
+            ret = arr[i][j][2]
+            arr[i][j] = 0
             return ret
+    return 0
 
 def move():
-    board = [[list()] * (M+1) for _ in range(N+1)]
-    for i in range(1, N+1):
-        for j in range(1, M+1):
-            if arr[i][j]:
-                # print(arr[i][j])
-                size, cs, cd = arr[i][j]
-                ci, cj = i, j
-                di, dj = delta[cd]
-                for k in range(cs):
-                    ni, nj = ci+di, cj+dj
-                    if 1 <= ni <= N and 1 <= nj <= M:
-                        ci, cj = ni, nj
-                    else:
-                        cd = turn[cd]
-                        di, dj = delta[cd]
-                        ci, cj = ci+di, cj+dj
-                if board[ci][cj]:
-                    if board[ci][cj][0] < size:
-                        board[ci][cj] = (size, cs, cd)
-                else:
-                    board[ci][cj] = (size, cs, cd)
-    return board
+    new = [[0] * M for _ in range(N)]
+    for i in range(N):
+        for j in range(M):
+            # 상어가 없는 칸은 처리하지 않음
+            if not arr[i][j]: continue
+            s, d, z = arr[i][j]
+            # 열 이동
+            if d >= 3:
+                # 일단 다 더해놓고
+                ni, nj = i, j + s * delta[d][1]
+                e, m = divmod(nj, M-1)
+                # 원 방향대로 가면
+                if e % 2 == 0: nj = m
+                # 방향을 바꾸는 경우
+                else: d = turn[d]; nj = (M-1)-m
+            # 행 이동
+            else:
+                ni, nj = i + s * delta[d][0], j
+                e, m = divmod(ni, N-1)
+                # 원 방향대로 가면
+                if e % 2 == 0: ni = m
+                # 방향을 바꾸는 경우
+                else: d = turn[d]; ni = (N-1)-m
+            if not new[ni][nj] or new[ni][nj][2] < z: new[ni][nj] = (s, d, z)
+    return new
 
 N, M, K = map(int, input().split())
-arr = [[list()] * (M+1) for _ in range(N+1)]
 delta = {1: (-1, 0), 2: (1, 0), 3: (0, 1), 4: (0, -1)}
 turn = {1: 2, 2: 1, 3: 4, 4: 3}
+arr = [[0] * M for _ in range(N)]
 for _ in range(K):
-    si, sj, s, d, size = map(int, input().split())
-    arr[si][sj] = (size, s, d)
+    si, sj, s, d, z = map(int, input().split())
+    arr[si-1][sj-1] = (s, d, z)
 
-lst = []
-for i in range(1, M+1):
-    c = catch(i)
-    if c:
-        lst.append(c)
+ans = 0
+for j in range(M):
+    ans += catch(j)
     arr = move()
-print(sum(lst))
+
+print(ans)
