@@ -14,7 +14,7 @@ for i in range(1, M+1):
         shark_prop[i][j] = lst
 
 time = 0
-smell = [[[list() for k in range(1001)] for j in range(N)] for i in range(N)]
+smell = [[0 for j in range(N)] for i in range(N)]
 remain = [i for i in range(1, M+1)]
 while time < 1000:
     board = [[0] * N for _ in range(N)]
@@ -22,8 +22,7 @@ while time < 1000:
     for i in range(N):
         for j in range(N):
             if arr[i][j]:
-                for t in range(time, min(time+K, 1001)):
-                    smell[i][j][t].append(arr[i][j])
+                smell[i][j] = [arr[i][j], K]
     # 이동
     for i in range(N):
         for j in range(N):
@@ -47,10 +46,10 @@ while time < 1000:
                     if 0 <= ni < N and 0 <= nj < N:
                         cnt = 0
                         # 나랑 다른 냄새가 마킹되어 있으면
-                        if smell[ni][nj][time] and arr[i][j] not in smell[ni][nj][time]:
+                        if smell[ni][nj] and arr[i][j] != smell[ni][nj][0]:
                             continue
                         # 내 냄새가 마킹되어 있으면 후보
-                        if smell[ni][nj][time]:
+                        if smell[ni][nj]:
                             cand.append((ni, nj, sd))
                         else:
                             cand = (ni, nj, sd)
@@ -79,6 +78,13 @@ while time < 1000:
                         remain.remove(arr[i][j])
                     # 방향 변경
                     shark_d[arr[i][j]] = ad
+    # 냄새 유효시간 감소
+    for i in range(N):
+        for j in range(N):
+            if smell[i][j]:
+                smell[i][j][1] -= 1
+                if smell[i][j][1] == 0:
+                    smell[i][j] = 0
     time += 1
     arr = board
     if len(remain) == 1:
