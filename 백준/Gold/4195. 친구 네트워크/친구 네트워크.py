@@ -1,3 +1,6 @@
+import sys
+input = sys.stdin.readline
+
 def find(v):
     if p[v] >= 0:
         p[v] = find(p[v])
@@ -5,7 +8,6 @@ def find(v):
     else:
         return v
     return p[v]
-
 
 def union(a, b):
     a, b = name[a], name[b]
@@ -24,7 +26,6 @@ def union(a, b):
             p[a] = b
             ret = abs(p[b])
     print(ret)
-
 
 for tc in range(int(input())):
     F = int(input())
