@@ -64,14 +64,6 @@ def crash(lst):
         status[num] = False
 
 
-def move():
-    for num in range(1, N+1):
-        if not status[num]: continue
-        atom = atoms[num]
-        di, dj = delta[atom.d]
-        atom.i, atom.j = atom.i+di, atom.j+dj
-
-
 delta = ((1, 0), (-1, 0), (0, -1), (0, 1))
 for tc in range(1, int(input())+1):
     N = int(input())
@@ -89,6 +81,4 @@ for tc in range(1, int(input())+1):
             break
         # 충돌 진행
         crash(clst)
-        # 나머지 이동
-        # move()
     print(f'#{tc} {ans}')
