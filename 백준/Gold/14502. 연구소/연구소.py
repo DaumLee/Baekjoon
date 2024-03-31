@@ -1,55 +1,54 @@
 from collections import deque
-from itertools import combinations
 
 
-def bfs(start, w):
-    global ans
-
-    q = deque(start)
-    v = [[0] * M for _ in range(N)]
-
+def scoring(added, num):
+    tmp = [lst[:] for lst in arr]
+    for wi, wj in added:
+        tmp[wi][wj] = 1
+    q = deque(fire)
     while q:
         ci, cj = q.popleft()
-        # 바이러스 전염
-        v[ci][cj] = 1
-        for di, dj in ((-1, 0), (1, 0), (0, -1), (0, 1)):
+        for di, dj in ((-1, 0), (1, 0), (0, 1), (0, -1)):
             ni, nj = ci+di, cj+dj
-            if (ni, nj) in w:
-                continue
-            # 기존 벽에 안막히면 진행
-            if 0 <= ni < N and 0 <= nj < M and not v[ni][nj] and board[ni][nj] != 1:
-                v[ni][nj] = 1
+            if 0 <= ni < N and 0 <= nj < M and v[ni][nj] != num and not tmp[ni][nj]:
+                v[ni][nj] = num
                 q.append((ni, nj))
+    ret = 0
+    for i in range(N):
+        for j in range(M):
+            if v[i][j] == num:
+                ret += 1
+    return ret
 
-    # 벽 3개 제외
-    sm = -3
-    for line in v:
-        sm += line.count(0)
 
-    for line in board:
-        sm -= line.count(1)
+def solve(ci, cj, lst=[]):
+    global score, num
+    if len(lst) == 3:
+        score = min(score, scoring(lst, num))
+        num += 1
+        return
 
-    ans = max(ans, sm)
+    for i in range(ci, N):
+        for j in range(M):
+            if i == ci and j <= cj: continue
+            if not arr[i][j]:
+                solve(i, j, lst+[(i, j)])
+
 
 N, M = map(int, input().split())
-board = []
-# 바이러스 위치(bfs 시작)
-virus = []
-# 빈칸의 위치
-blank = []
+arr = []
+fire = []
+v = [[0] * M for _ in range(N)]
+blanks = 0
 for i in range(N):
     lst = list(map(int, input().split()))
-    board.append(lst)
+    arr.append(lst)
     for j in range(M):
         if lst[j] == 2:
-            virus.append((i, j))
+            fire.append((i, j))
         elif lst[j] == 0:
-            blank.append((i, j))
-
-ans = 0
-
-# 빈 칸 세 곳에 벽을 치자
-for wall in combinations(blank, 3):
-    bfs(virus, wall)
-
-print(ans)
+            blanks += 1
+num = 1
+score = N*M
+solve(-1, -1)
+print(blanks-score-3)
