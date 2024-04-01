@@ -1,86 +1,48 @@
 from collections import deque
 
-
-def adv(si, sj, size, exp):
-    # 최초 먹을 수 있는 물고기
-    can = []
-    # fs = 물고기의 크기
-    for fs in fish.keys():
-        # 먹을 수 있으면
-        if fs < size:
-            can.extend(fish[fs])
-    time = 0
-    ci, cj = si, sj
-    while True:
-        q = deque([(ci, cj)])
-        v = [[0] * N for _ in range(N)]
-        v[ci][cj] = 1
-        flag = N ** 2 + 1
-        ei = ej = -1
-        while q:
-            ci, cj = q.popleft()
-            if v[ci][cj] > flag:
-                break
-            for di, dj in delta:
-                ni, nj = ci+di, cj+dj
-                # 이동
-                if 0 <= ni < N and 0 <= nj < N and not v[ni][nj] and (arr[ni][nj] <= size or arr[ni][nj] == 9):
-                    # 먹을 수 있는 물고기를 최초 발견하면 그때까지만 반복
-                    if (ni, nj) in can and arr[ni][nj]:
-                        if ei != -1:
-                            # 더 위의 값이면
-                            if ei > ni:
-                                ei, ej = ni, nj
-                            # 같은 행에서 더 왼쪽 값이면
-                            elif ei == ni and ej > nj:
-                                ei, ej = ni, nj
-                        else:
-                            ei, ej = ni, nj
-                        flag = v[ci][cj]
-                        continue
-                    v[ni][nj] = v[ci][cj]+1
-                    q.append((ni, nj))
-        if ei != -1:
-            # 맨 위, 맨 왼쪽을 먹음
-            can.remove((ei, ej))
-            # 물고기 먹었음
-            arr[ei][ej] = 0
-            # 경험치 먹음
-            exp += 1
-            if exp == size:
-                exp = 0
-                size += 1
-                if size-1 in fish:
-                    can.extend(fish[size-1])
-            # print((ei, ej), flag)
-            time += flag
-            ci, cj = ei, ej
-        else:
-            break
-    print(time)
-
+def find_enemy(si, sj):
+    q = deque([(si, sj)])
+    v = [[0] * N for _ in range(N)]
+    v[si][sj] = 1
+    cand = []
+    flag = N**2*2
+    while q:
+        ci, cj = q.popleft()
+        if v[ci][cj] > flag: break
+        for di, dj in delta:
+            ni, nj = ci+di, cj+dj
+            if 0 <= ni < N and 0 <= nj < N and not v[ni][nj] and arr[ni][nj] <= level:
+                if arr[ni][nj] and arr[ni][nj] < level:
+                    cand.append((ni, nj, v[ci][cj]))
+                    flag = v[ci][cj]
+                v[ni][nj] = v[ci][cj]+1
+                q.append((ni, nj))
+    if cand:
+        cand.sort()
+        return cand[0]
+    return -1, -1, -1
 
 N = int(input())
 arr = []
-size = 2
-fish = dict()
-# 전체 물고기 수
-# fish_cnt = 0
 for i in range(N):
     lst = list(map(int, input().split()))
     arr.append(lst)
     for j in range(N):
         if lst[j] == 9:
             si, sj = i, j
-        elif lst[j]:
-            # 이미 같은 사이즈의 물고기가 있다면
-            if lst[j] in fish:
-                fish[lst[j]].append((i, j))
-            # 없으면 생성
-            else:
-                fish[lst[j]] = [(i, j)]
-            # fish_cnt += 1
-
-delta = ((0, -1), (-1, 0), (1, 0), (0, 1))
-
-adv(si, sj, size, 0)
+            lst[j] = 0
+delta = ((-1, 0), (0, -1), (0, 1), (1, 0))
+level = 2
+ans = 0
+eat = 0
+while True:
+    ei, ej, time = find_enemy(si, sj)
+    if (ei, ej) == (-1, -1): break
+    ans += time
+    arr[ei][ej] = 0
+    si, sj = ei, ej
+    eat += 1
+    if eat == level:
+        level += 1
+        eat = 0
+print(ans)
