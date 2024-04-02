@@ -4,7 +4,7 @@
 
 ### 성능 요약
 
-메모리: 115440 KB, 시간: 244 ms
+메모리: 111804 KB, 시간: 196 ms
 
 ### 분류
 
@@ -12,7 +12,7 @@
 
 ### 제출 일자
 
-2024년 3월 20일 08:40:12
+2024년 4월 2일 17:10:05
 
 ### 문제 설명
 
@@ -24,7 +24,7 @@
 
 <p>모든 상어가 이동한 후 한 칸에 여러 마리의 상어가 남아 있으면, 가장 작은 번호를 가진 상어를 제외하고 모두 격자 밖으로 쫓겨난다.</p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/149aa507-f474-43cb-9071-1959bb83d59a/-/preview/" style="width: 353px; height: 352px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 353px; height: 352px;"></p>
 
 <p style="text-align: center;"><그림 1></p>
 
@@ -102,7 +102,7 @@
 
 <p style="text-align: center;"><그림 4></p>
 
-<p style="text-align: center;"><img alt="" src="https://upload.acmicpc.net/76e735b6-44e1-437c-9b69-b7f55ea29d02/-/preview/" style="width: 902px; height: 357px;"></p>
+<p style="text-align: center;"><img alt="" src="" style="width: 902px; height: 357px;"></p>
 
 <p style="text-align: center;"><그림 5></p>
 
