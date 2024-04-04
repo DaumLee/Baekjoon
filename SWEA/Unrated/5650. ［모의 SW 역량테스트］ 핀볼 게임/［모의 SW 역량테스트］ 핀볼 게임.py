@@ -1,17 +1,12 @@
 def check(ci, cj, cd):
     di, dj = delta[cd]
     ni, nj = ci+di, cj+dj
-    if not (0 <= ni < N and 0 <= nj < N) or (arr[ni][nj] in blocked[cd]):
-        return True
-    return False
-
+    return True if not (0 <= ni < N and 0 <= nj < N) or (arr[ni][nj] in blocked[cd]) else False
 
 def find(si, sj, num):
     for i in range(N):
         for j in range(N):
-            if arr[i][j] == num and (i, j) != (si, sj):
-                return i, j
-
+            if arr[i][j] == num and (i, j) != (si, sj): return i, j
 
 def play(si, sj, cd):
     ci, cj = si, sj
@@ -19,34 +14,26 @@ def play(si, sj, cd):
     while True:
         di, dj = delta[cd]
         ni, nj = ci+di, cj+dj
-        if (ni, nj) == (si, sj):
-            return score
+        if (ni, nj) == (si, sj): return score
         if 0 <= ni < N and 0 <= nj < N:
-            if not arr[ni][nj]:
-                ci, cj = ni, nj
-                continue
+            if not arr[ni][nj]: ci, cj = ni, nj
             elif 1 <= arr[ni][nj] <= 5:
-                if arr[ni][nj] in blocked[cd]:
-                    cd = (cd+2)%4
+                if arr[ni][nj] in blocked[cd]: cd = (cd+2)%4
                 else:
-                    if arr[ni][nj] == turn[cd][0]:
-                        cd = (cd+1)%4
-                    else:
-                        cd = (cd-1)%4
+                    if arr[ni][nj] == turn[cd][0]: cd = (cd+1)%4
+                    else: cd = (cd-1)%4
                 ci, cj = ni, nj
                 score += 1
             elif 6 <= arr[ni][nj] <= 10:
                 ei, ej = find(ni, nj, arr[ni][nj])
                 ci, cj = ei, ej
-            else:
-                return score
+            else: return score
         else:
             cd = (cd+2)%4
             ci, cj = ni, nj
             score += 1
 
-
-for tc in range(1, int(input())+1):
+for tc in range(1, int(input()) + 1):
     N = int(input())
     arr = [list(map(int, input().split())) for _ in range(N)]
     delta = ((0, 1), (1, 0), (0, -1), (-1, 0))
@@ -57,7 +44,6 @@ for tc in range(1, int(input())+1):
         for j in range(N):
             if not arr[i][j]:
                 for d in range(4):
-                    if check(i, j, d) and check(i, j, (d+2)%4):
-                        continue
+                    if check(i, j, d) and check(i, j, (d+2)%4): continue
                     ans = max(ans, play(i, j, d))
     print(f'#{tc} {ans}')
