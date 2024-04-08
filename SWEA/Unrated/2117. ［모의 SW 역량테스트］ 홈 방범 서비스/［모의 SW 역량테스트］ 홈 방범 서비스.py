@@ -27,7 +27,6 @@ cost = {2: 5, 3: 13, 4: 25, 5: 41, 6: 61, 7: 85, 8: 113, 9: 145, 10: 181, 11: 22
 for tc in range(1, int(input())+1):
     N, M = map(int, input().split())
     arr = [list(map(int, input().split())) for _ in range(N)]
-    mx = sum(map(sum, arr))
     ans = 1
     flag = 0
     for K in range(2, min(22, N+2)):
@@ -36,11 +35,4 @@ for tc in range(1, int(input())+1):
                 cnt = bfs(i, j, K)
                 if cnt*M >= cost[K]:
                     ans = max(ans, cnt)
-                    if ans == mx:
-                        flag = 1
-                        break
-            if flag:
-                break
-        if flag:
-            break
     print(f'#{tc} {ans}')
