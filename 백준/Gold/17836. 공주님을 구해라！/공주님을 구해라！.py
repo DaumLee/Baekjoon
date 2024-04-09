@@ -1,12 +1,10 @@
-from collections import deque
-
 def bfs(si, sj):
-    q = deque([(si, sj)])
+    q = [(si, sj)]
     v = [[0] * M for _ in range(N)]
     v[si][sj] = 1
     ans = T+1
     while q:
-        ci, cj = q.popleft()
+        ci, cj = q.pop(0)
         if (ci, cj) == (N-1, M-1): ans = min(ans, v[ci][cj]-1)
         if v[ci][cj]-1 > T: break
         for di, dj in ((-1, 0), (1, 0), (0, -1), (0, 1)):
@@ -14,7 +12,7 @@ def bfs(si, sj):
             if 0 <= ni < N and 0 <= nj < M and not v[ni][nj] and arr[ni][nj] != 1:
                 v[ni][nj] = v[ci][cj]+1
                 if arr[ni][nj] == 2:
-                    ans = min(ans, v[ci][cj]+N-1-ni+M-1-nj)
+                    ans = min(ans, v[ci][cj]+N+M-2-ni-nj)
                 else:
                     q.append((ni, nj))
     return ans if ans <= T else 'Fail'
