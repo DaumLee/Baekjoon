@@ -1,11 +1,12 @@
 import heapq
 
+
 def down(lst):
     query = []
     for i in range(len(lst)):
         ci, cj = loc[i]
         ei, ej, K = end[lst[i]]
-        heapq.heappush(query, (abs(ci-ei)+abs(cj-ej), lst[i], K, 0))
+        heapq.heappush(query, (abs(ci - ei) + abs(cj - ej), lst[i], K, 0))
 
     # 계단 내려가는 사람 수
     v = [0, 0]
@@ -25,7 +26,7 @@ def down(lst):
                 if v[s]:
                     r = 0
                     for p in range(len(time[s])):
-                        time[s][p] -= t-now
+                        time[s][p] -= t - now
                         if time[s][p] <= 0:
                             v[s] -= 1
                             r += 1
@@ -36,8 +37,10 @@ def down(lst):
             if v[stair] < 3:
                 if arrived:
                     time[stair].append(K)
+                    heapq.heappush(query, (t+K, -1, -1, 1))
                 else:
                     time[stair].append(K+1)
+                    heapq.heappush(query, (t+K+1, -1, -1, 1))
                 v[stair] += 1
             else:
                 heapq.heappush(query, (t+1, stair, K, 1))
@@ -53,10 +56,10 @@ def divide(lst):
         return
 
     for i in range(2):
-        divide(lst+[i])
+        divide(lst + [i])
 
 
-for tc in range(1, int(input())+1):
+for tc in range(1, int(input()) + 1):
     N = int(input())
     loc = []
     end = []
