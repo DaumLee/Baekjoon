@@ -6,7 +6,8 @@ def down(lst):
     for i in range(len(lst)):
         ci, cj = loc[i]
         ei, ej, K = end[lst[i]]
-        heapq.heappush(query, (abs(ci - ei) + abs(cj - ej), lst[i], K, 0))
+        # 거리, 계단 번호, 계단을 내려갈 때까지 걸리는 시간, 계단 입구 도착 여부를 힙큐에 저장
+        heapq.heappush(query, (abs(ci-ei) + abs(cj-ej), lst[i], K, 0))
 
     # 계단 내려가는 사람 수
     v = [0, 0]
@@ -14,11 +15,15 @@ def down(lst):
     time = [[], []]
     # 나간 사람 수
     cnt = 0
+    # 현재 시간
     now = -1
     while cnt < len(loc):
+        # 쿼리에 값이 있으면 시간 점프
         if query:
             t, stair, K, arrived = heapq.heappop(query)
+            # 최초 시간을 현재 시간과 동기화
             if now == -1: now = t
+        # 더이상 쿼리가 없으면 시간을 1씩 증가
         else:
             t, stair = now+1, -1
         if now != t:
@@ -33,17 +38,23 @@ def down(lst):
                     for _ in range(r):
                         time[s].pop(0)
                     cnt += r
+        # 계단을 들어가려고 시도하는 경우
         if stair != -1:
+            # 계단에 들어갈 수 있으면
             if v[stair] < 3:
+                # 계단 입구에서 대기 중이면 K시간 뒤 완료
                 if arrived:
                     time[stair].append(K)
                     heapq.heappush(query, (t+K, -1, -1, 1))
+                # 계단 입구에 지금 막 도착했으면 K+1시간 뒤 완료
                 else:
                     time[stair].append(K+1)
                     heapq.heappush(query, (t+K+1, -1, -1, 1))
                 v[stair] += 1
+            # 다음 시간에 다시 시도, 계단 입구에는 도착해 있음
             else:
                 heapq.heappush(query, (t+1, stair, K, 1))
+        # 시간 동기화
         now = t
     return now
 
@@ -51,6 +62,7 @@ def down(lst):
 def divide(lst):
     global ans
 
+    # 사람이 어떤 계단으로 들어갈 지 모두 정했으면
     if len(lst) == len(loc):
         ans = min(ans, down(lst))
         return
