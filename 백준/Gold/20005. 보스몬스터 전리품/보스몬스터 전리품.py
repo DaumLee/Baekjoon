@@ -1,6 +1,5 @@
 from collections import deque
 
-
 def adventure(si, sj):
     q = deque([(si, sj)])
     v = [[0] * M for _ in range(N)]
@@ -10,22 +9,18 @@ def adventure(si, sj):
         if 97 <= ord(arr[ci][cj]) <= 122:
             query.append((v[ci][cj]-1, arr[ci][cj]))
         for di, dj in ((-1, 0), (1, 0), (0, 1), (0, -1)):
-            ni, nj = ci + di, cj + dj
+            ni, nj = ci+di, cj+dj
             if 0 <= ni < N and 0 <= nj < M and not v[ni][nj] and arr[ni][nj] != 'X':
                 v[ni][nj] = v[ci][cj] + 1
                 q.append((ni, nj))
 
-
 N, M, P = map(int, input().split())
 arr = []
-loc = dict()
 for i in range(N):
     lst = list(input())
     for j in range(M):
         if lst[j] == 'B':
             ei, ej = i, j
-        elif 97 <= ord(lst[j]) <= 122:
-            loc[lst[j]] = (i, j)
     arr.append(lst)
 
 ad = dict()
