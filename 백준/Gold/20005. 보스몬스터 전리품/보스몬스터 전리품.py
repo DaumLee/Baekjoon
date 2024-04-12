@@ -1,22 +1,19 @@
 from collections import deque
 
-def adventure():
-    for num in range(97, 97+P):
-        id = chr(num)
-        si, sj = loc[id]
-        q = deque([(si, sj)])
-        v = [[0] * M for _ in range(N)]
-        v[si][sj] = 1
-        while q:
-            ci, cj = q.popleft()
-            if (ci, cj) == (ei, ej):
-                query.append((v[ci][cj]-1, id))
-                break
-            for di, dj in ((-1, 0), (1, 0), (0, 1), (0, -1)):
-                ni, nj = ci+di, cj+dj
-                if 0 <= ni < N and 0 <= nj < M and not v[ni][nj] and arr[ni][nj] != 'X':
-                    v[ni][nj] = v[ci][cj]+1
-                    q.append((ni, nj))
+
+def adventure(si, sj):
+    q = deque([(si, sj)])
+    v = [[0] * M for _ in range(N)]
+    v[si][sj] = 1
+    while q:
+        ci, cj = q.popleft()
+        if 97 <= ord(arr[ci][cj]) <= 122:
+            query.append((v[ci][cj]-1, arr[ci][cj]))
+        for di, dj in ((-1, 0), (1, 0), (0, 1), (0, -1)):
+            ni, nj = ci + di, cj + dj
+            if 0 <= ni < N and 0 <= nj < M and not v[ni][nj] and arr[ni][nj] != 'X':
+                v[ni][nj] = v[ci][cj] + 1
+                q.append((ni, nj))
 
 
 N, M, P = map(int, input().split())
@@ -29,7 +26,6 @@ for i in range(N):
             ei, ej = i, j
         elif 97 <= ord(lst[j]) <= 122:
             loc[lst[j]] = (i, j)
-            lst[j] = '.'
     arr.append(lst)
 
 ad = dict()
@@ -40,7 +36,7 @@ for _ in range(P):
 HP = int(input())
 
 query = []
-adventure()
+adventure(ei, ej)
 query.sort()
 
 now = -1
