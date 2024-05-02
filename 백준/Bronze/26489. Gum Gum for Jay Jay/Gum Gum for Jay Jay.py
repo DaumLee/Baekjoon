@@ -1,2 +1,2 @@
 import sys
-print(len(list(sys.stdin.read().split("\n")))-1)
+print(len(sys.stdin.readlines()))
